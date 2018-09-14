@@ -1,0 +1,10 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="android:windowBackground">@drawable/startup_background</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:popupBackground">@drawable/list_item_bg</item>
+    </style>
+
+</resources>
