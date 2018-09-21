@@ -2,6 +2,7 @@ package com.summer.netcloud.window;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -141,6 +142,9 @@ public class WindowStack implements SwipeDectector.IListener{
         if(dx >= 0){
             AbsWindow top = mStack.peek();
             top.getView().animate().x(dx).setDuration(0).start();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                top.getView().setTranslationZ(20);
+            }
         }
 
         return true;
@@ -157,21 +161,24 @@ public class WindowStack implements SwipeDectector.IListener{
 
     @Override
     public boolean onSwipeCancel(int dx) {
-        if(dx > 0){
-            AbsWindow top = mStack.peek();
-            if(dx >= mRoot.getWidth()/3){
-                Animation animation = new TranslateAnimation(Animation.RELATIVE_TO_PARENT,top.getView().getX(),Animation.RELATIVE_TO_PARENT,1,
-                        Animation.RELATIVE_TO_PARENT,0,Animation.RELATIVE_TO_PARENT,0);
+        AbsWindow top = mStack.peek();
+        if(dx >= mRoot.getWidth()/3){
+            Animation animation = new TranslateAnimation(Animation.RELATIVE_TO_PARENT,top.getView().getX(),Animation.RELATIVE_TO_PARENT,1,
+                    Animation.RELATIVE_TO_PARENT,0,Animation.RELATIVE_TO_PARENT,0);
 
-                animation.setDuration((int)(((mRoot.getWidth()-top.getView().getX())/mRoot.getWidth())*300));
-                pop();
-            }else{
-                top.getView().animate().x(0).setDuration((int)(((float)dx)/mRoot.getWidth()*400)).start();
+            animation.setDuration((int)(((mRoot.getWidth()-top.getView().getX())/mRoot.getWidth())*300));
+            pop();
+        }else {
+            long dur = (long)(((float)dx)/mRoot.getWidth()*400);
+            if(dur < 0){
+                dur = 0;
             }
-            return true;
+            top.getView().animate().x(0).setDuration(dur).start();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                top.getView().setTranslationZ(0);
+            }
         }
-
-        return false;
+        return true;
     }
 
     private class StackView extends FrameLayout {
@@ -182,7 +189,6 @@ public class WindowStack implements SwipeDectector.IListener{
 
         @Override
         public boolean dispatchTouchEvent(MotionEvent ev) {
-//            return super.dispatchTouchEvent(ev);
 
             if(!mSwipeDetector.onTouchEvent(ev)){
                 return super.dispatchTouchEvent(ev);

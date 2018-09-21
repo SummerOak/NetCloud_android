@@ -375,7 +375,7 @@ public class TrafficCtrlWindow extends AbsListContentWindow<TrafficCtrlWindow.Ct
 
             mDelete = new TextView(getContext());
             mDelete.setGravity(Gravity.CENTER_VERTICAL|Gravity.RIGHT);
-            int buttonVtlPadding = (int)ResTools.getDimen(R.dimen.button_vtl_padding);
+            int buttonVtlPadding = (int)ResTools.getDimen(R.dimen.btn_vtl_padding);
             mDelete.setPadding(hp, buttonVtlPadding, hp, buttonVtlPadding);
             mDelete.setOnClickListener(this);
             mDelete.setText("Delete");
@@ -581,8 +581,8 @@ public class TrafficCtrlWindow extends AbsListContentWindow<TrafficCtrlWindow.Ct
                 convertView = new TextView(getContext());
                 convertView.setBackgroundColor(Color.TRANSPARENT);
                 ((TextView)convertView).setTextSize(TypedValue.COMPLEX_UNIT_PX,(int)ResTools.getDimen(R.dimen.textsize2));
-                int vp = ScreenUtils.dp2px(12);
-                int hp = (int)ResTools.getDimen(R.dimen.hor_padding);
+                int vp = (int)ResTools.getDimen(R.dimen.btn_vtl_padding2);
+                int hp = (int)ResTools.getDimen(R.dimen.btn_hor_padding);
                 convertView.setPadding(hp, vp, hp, vp);
             }
 
@@ -595,8 +595,8 @@ public class TrafficCtrlWindow extends AbsListContentWindow<TrafficCtrlWindow.Ct
         public View getView(int position, View convertView, ViewGroup parent) {
             TextView textView = (TextView)convertView;
             if(textView == null){
-                int hp = (int)ResTools.getDimen(R.dimen.hor_padding);
-                int vp = (int)ResTools.getDimen(R.dimen.button_vtl_padding);
+                int hp = (int)ResTools.getDimen(R.dimen.btn_hor_padding);
+                int vp = (int)ResTools.getDimen(R.dimen.btn_vtl_padding);
                 textView = new TextView(getContext());
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (int)ResTools.getDimen(R.dimen.textsize2));
                 textView.setGravity(Gravity.CENTER_VERTICAL|Gravity.RIGHT);

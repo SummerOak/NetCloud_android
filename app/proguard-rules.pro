@@ -21,3 +21,4 @@
 #-renamesourcefileattribute SourceFile
 
 -keep class com.summer.netcore.** { *; }
+-keep class com.summer.crashsdk.** { *; }

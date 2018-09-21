@@ -5,14 +5,14 @@
         android:state_selected="true">
         <shape>
             <solid android:color="@color/blue" />
-            <corners android:radius="5dp" />
+            <corners android:radius="@dimen/button_bg_radius" />
         </shape>
     </item>
 
     <item>
         <shape>
             <solid android:color="#FF3d3d3d" />
-            <corners android:radius="5dp" />
+            <corners android:radius="@dimen/button_bg_radius" />
         </shape>
     </item>
 

@@ -48,7 +48,7 @@ public class TrafficMgr implements NetCoreIface.IListener{
 
     public int init(){
         NetCoreIface.init(ContextMgr.getApplicationContext());
-        NetCoreIface.setForgroundNotifycation(NetWatcherApp.buildNotification());
+        NetCoreIface.setForgroundNotifycation(NetWatcherApp.NOTIFICATION_ID, NetWatcherApp.buildNotification());
         NetCoreIface.setListener(this);
         return 0;
     }
@@ -56,7 +56,6 @@ public class TrafficMgr implements NetCoreIface.IListener{
     public int start(Context context){
         if(isCtrlSetEmpty()){
             Intent intent = new Intent(context, MainActivity.class);
-//            intent.setAction(MainActivity.ACT_OPEN_WINDOW_STRATEGY_CTRL);
             context.startActivity(intent);
 
             return 1;
