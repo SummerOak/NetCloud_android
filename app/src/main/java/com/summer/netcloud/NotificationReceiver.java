@@ -16,6 +16,8 @@ public class NotificationReceiver extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        moveTaskToBack(true);
+
         if(NetCoreIface.isServerRunning()){
             TrafficMgr.getInstance().stop();
         }else{

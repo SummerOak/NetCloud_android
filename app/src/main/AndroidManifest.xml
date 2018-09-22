@@ -30,6 +30,8 @@
 
         </activity>
 
+        <service android:name=".PersistentService"/>
+
     </application>
 
 </manifest>

@@ -18,7 +18,6 @@ import com.summer.netcloud.message.Messege;
 import com.summer.netcloud.message.MsgDispatcher;
 import com.summer.netcloud.traffic.TrafficMgr;
 import com.summer.netcloud.utils.JobScheduler;
-import com.summer.netcore.NetCoreIface;
 
 /**
  * Created by summer on 25/06/2018.
@@ -42,17 +41,17 @@ public class NetWatcherApp extends Application implements IMsgListener{
         MsgDispatcher.get().registerMsg(Messege.VPN_STOP, this);
         MsgDispatcher.get().registerMsg(Messege.VPN_START, this);
 
-        showNotification(this);
+        startPersistentService(this);
     }
 
     @Override
     public void onMessage(int msgId, Object arg) {
         if(msgId == Messege.VPN_STOP){
-            showNotification(this);
+            startPersistentService(this);
         }else if(msgId == Messege.VPN_START){
             RemoteViews content = sNotification.contentView;
             if(content != null){
-                showNotification(this);
+                startPersistentService(this);
             }
         }
     }
@@ -60,26 +59,22 @@ public class NetWatcherApp extends Application implements IMsgListener{
     @Override
     public Object onSyncMessage(int msgId, Object arg) {
         if(msgId == Messege.VPN_STOP){
-            showNotification(this);
+            startPersistentService(this);
         }else if(msgId == Messege.VPN_START){
-            showNotification(this);
+            startPersistentService(this);
         }
 
         return null;
     }
 
+    public static void startPersistentService(Context context){
+        Intent intent = new Intent(context, PersistentService.class);
 
-    public static void showNotification(Context ctx){
-        NotificationManager nMgr = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        sNotification = buildNotification();
-        RemoteViews content = sNotification.contentView;
-        if(content != null){
-            content.setCharSequence(R.id.netcloud_notify_desc, "setText", NetCoreIface.isServerRunning()?"VPN service is running":"VPN service is not running");
-            content.setCharSequence(R.id.netcloud_notify_button, "setText", NetCoreIface.isServerRunning()?"STOP":"START");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(intent);
+        } else {
+            context.startService(intent);
         }
-
-        nMgr.notify(NOTIFICATION_ID, sNotification);
     }
 
     public static Notification buildNotification(){
@@ -87,7 +82,6 @@ public class NetWatcherApp extends Application implements IMsgListener{
             return sNotification;
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             Context ctx = ContextMgr.getApplicationContext();
             RemoteViews content = new RemoteViews(ctx.getPackageName(), R.layout.notification_layout);
 
@@ -97,13 +91,18 @@ public class NetWatcherApp extends Application implements IMsgListener{
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             PendingIntent contentPendingIntent = PendingIntent.getActivity(ctx, 0, notificationIntent, 0);
 
-            sNotification =  builder
-                    .setSmallIcon(R.drawable.icon_ntf)
-                    .setContentIntent(contentPendingIntent)
-                    .setOngoing(true)
-                    .setDefaults(Notification.DEFAULT_ALL)
-                    .setOnlyAlertOnce(true)
-                    .build();
+            builder.setSmallIcon(R.drawable.icon_ntf)
+                .setContentIntent(contentPendingIntent)
+                .setOngoing(true)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setOnlyAlertOnce(true);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                sNotification = builder.build();
+            }else{
+                sNotification = builder.getNotification();
+            }
+
 
             Intent ntfReceiver = new Intent(ctx, NotificationReceiver.class);
             ntfReceiver.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -111,11 +110,8 @@ public class NetWatcherApp extends Application implements IMsgListener{
             PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, ntfReceiver, 0);
             content.setOnClickPendingIntent(R.id.netcloud_notify_button, pendingIntent);
 
-
             sNotification.contentView = content;
             sNotification.flags = sNotification.flags | Notification.FLAG_NO_CLEAR;
-
-        }
 
         return sNotification;
     }
