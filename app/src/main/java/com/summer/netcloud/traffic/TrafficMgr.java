@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.util.Pair;
 import android.util.SparseArray;
 
+import com.summer.netcloud.utils.JobScheduler;
+import com.summer.netcloud.utils.PackageUtils;
+import com.summer.netcore.Config;
 import com.summer.netcore.NetCoreIface;
 import com.summer.netcore.VpnConfig;
 import com.summer.netcloud.Constants;
@@ -17,7 +20,9 @@ import com.summer.netcloud.utils.Listener;
 import com.summer.netcloud.utils.Log;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by summer on 14/06/2018.
@@ -50,7 +55,62 @@ public class TrafficMgr implements NetCoreIface.IListener{
         NetCoreIface.init(ContextMgr.getApplicationContext());
         NetCoreIface.setForgroundNotifycation(NetWatcherApp.NOTIFICATION_ID, NetWatcherApp.buildNotification());
         NetCoreIface.setListener(this);
+
+        VpnConfig.addListener(new VpnConfig.IListener() {
+            @Override
+            public void onVpnConfigLoaded() {
+                if(NetWatcherApp.isFirstLaunch()){
+                    initDefaultSettings();
+                }
+            }
+
+            @Override
+            public void onVpnConfigItemUpdated(int i, String s) {
+
+            }
+        });
+
+
         return 0;
+    }
+
+    private void initDefaultSettings(){
+        JobScheduler.scheduleBackground(new JobScheduler.Job("init-default-settings") {
+            @Override
+            public void run() {
+                if(!Constants.DEFAULT_APP_CTRLS.isEmpty()){
+                    List<PackageUtils.AppInfo> installedApps = PackageUtils.getAllInstallApps();
+                    if (installedApps != null) {
+                        for(PackageUtils.AppInfo ai:installedApps){
+                            if(Constants.DEFAULT_APP_CTRLS.containsKey(ai.pkg)){
+                                VpnConfig.updateCtrl(VpnConfig.CtrlType.APP, String.valueOf(ai.uid), Constants.DEFAULT_APP_CTRLS.get(ai.pkg));
+                            }
+                        }
+                    }
+                }
+
+                if(!Constants.DEFAULT_IP_CTRLS.isEmpty()){
+                    Iterator<Map.Entry<String, VpnConfig.AVAIL_CTRLS>> itr = Constants.DEFAULT_IP_CTRLS.entrySet().iterator();
+                    while(itr.hasNext()){
+                        Map.Entry<String, VpnConfig.AVAIL_CTRLS> entry = itr.next();
+                        VpnConfig.updateCtrl(VpnConfig.CtrlType.IP, entry.getKey(), entry.getValue());
+                    }
+
+                }
+
+                if(Constants.USE_DEFAULT_PROXY){
+                    VpnConfig.setConfig(Config.PROXY_IPVER, String.valueOf(Constants.DEFAULT_PROXY_IPVER));
+                    VpnConfig.setConfig(Config.PROXY_ADDR, Constants.DEFAULT_PROXY_ADDR);
+                    VpnConfig.setConfig(Config.PROXY_PORT, Constants.DEFAULT_PROXY_PORT);
+                }
+
+                if(Constants.USE_DEFAULT_DNS){
+                    VpnConfig.setConfig(Config.DNS_SERVER, Constants.DEFAULT_DNS);
+                }
+
+
+            }
+        });
     }
 
     public int start(Context context){

@@ -46,7 +46,7 @@ public class MainPageTitleBar implements IMsgListener, View.OnClickListener{
         mStart.setBackgroundResource(R.drawable.start_or_pause);
         mStart.setTextColor(ResTools.getColor(R.color.background));
         mStart.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-        mStart.setWidth(ScreenUtils.dp2px(60));
+        mStart.setMinWidth(ScreenUtils.dp2px(60));
         mTitlebar.addRight(mStart);
 
         MsgDispatcher.get().registerMsg(Messege.VPN_START,this);

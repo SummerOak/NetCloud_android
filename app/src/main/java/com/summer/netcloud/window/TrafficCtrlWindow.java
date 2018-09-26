@@ -21,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.summer.netcloud.utils.Log;
 import com.summer.netcore.Config;
 import com.summer.netcore.VpnConfig;
 import com.summer.netcloud.ContextMgr;

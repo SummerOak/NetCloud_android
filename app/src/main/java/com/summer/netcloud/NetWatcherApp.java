@@ -9,6 +9,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.widget.RemoteViews;
 
@@ -29,6 +30,8 @@ public class NetWatcherApp extends Application implements IMsgListener{
     public static final int NOTIFICATION_ID = 1;
     private static final String NOTIFICATION_CHANNEL_ID = "NetCloud";
 
+    private static byte sFirstLaunch = 0;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -42,6 +45,20 @@ public class NetWatcherApp extends Application implements IMsgListener{
         MsgDispatcher.get().registerMsg(Messege.VPN_START, this);
 
         startPersistentService(this);
+    }
+
+    public static final boolean isFirstLaunch(){
+
+        if(sFirstLaunch == 0){
+            Context context = ContextMgr.getApplicationContext();
+            SharedPreferences settings = context.getSharedPreferences("first_launch", 0);
+            sFirstLaunch = (byte)settings.getInt("first_launch", 1);
+            if (sFirstLaunch == 1) {
+                settings.edit().putInt("first_launch", 2).commit();
+            }
+        }
+
+        return sFirstLaunch == 1;
     }
 
     @Override

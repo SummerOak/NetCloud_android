@@ -21,6 +21,7 @@ import com.summer.netcloud.utils.Log;
 import com.summer.netcloud.utils.PackageUtils;
 import com.summer.netcloud.utils.ResTools;
 import com.summer.netcloud.utils.ScreenUtils;
+import com.summer.netcore.VpnConfig;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ import java.util.List;
  * Created by summer on 12/06/2018.
  */
 
-public class MainWindow extends AbsListContentWindow<Integer, MainWindow.ItemView> implements IMsgListener, TrafficMgr.ITrafficListener{
+public class MainWindow extends AbsListContentWindow<Integer, MainWindow.ItemView> implements IMsgListener, TrafficMgr.ITrafficListener, VpnConfig.IListener{
 
     private static final String TAG = Constants.TAG + ".MainWindow";
 
@@ -37,6 +38,8 @@ public class MainWindow extends AbsListContentWindow<Integer, MainWindow.ItemVie
 
     public MainWindow(Context context) {
         super(context);
+
+        VpnConfig.addListener(this);
 
         setEmptyDesc();
     }
@@ -239,6 +242,24 @@ public class MainWindow extends AbsListContentWindow<Integer, MainWindow.ItemVie
 
         appConnInfo.recv += bytes;
         updateItem(uid);
+    }
+
+    @Override
+    public void onVpnConfigLoaded() {
+        setEmptyDesc();
+        if(mTitleBar != null){
+            mTitleBar.update();
+        }
+
+    }
+
+    @Override
+    public void onVpnConfigItemUpdated(int i, String s) {
+        setEmptyDesc();
+        if(mTitleBar != null){
+            mTitleBar.update();
+        }
+
     }
 
     public static class AppConnInfo{
