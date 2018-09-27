@@ -220,7 +220,6 @@ public class TCPLogsWindow extends AbsListContentWindow<TCPLog,TCPLogsWindow.Ite
             setOrientation(HORIZONTAL);
             setGravity(Gravity.CENTER_VERTICAL);
 
-            setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,  ViewGroup.LayoutParams.WRAP_CONTENT));
             int hp = (int)ResTools.getDimen(R.dimen.hor_padding);
             int vp = (int)ResTools.getDimen(R.dimen.vtl_padding);
 

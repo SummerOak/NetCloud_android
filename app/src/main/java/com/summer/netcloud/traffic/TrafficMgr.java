@@ -78,6 +78,8 @@ public class TrafficMgr implements NetCoreIface.IListener{
         JobScheduler.scheduleBackground(new JobScheduler.Job("init-default-settings") {
             @Override
             public void run() {
+                VpnConfig.updateCtrl(VpnConfig.CtrlType.APP, String.valueOf(0), Constants.DEFAULT_SYSTEM_CTRL);
+                VpnConfig.updateCtrl(VpnConfig.CtrlType.APP, String.valueOf(-1), Constants.DEFAULT_UNKNOWN_CTRL);
                 if(!Constants.DEFAULT_APP_CTRLS.isEmpty()){
                     List<PackageUtils.AppInfo> installedApps = PackageUtils.getAllInstallApps();
                     if (installedApps != null) {
@@ -120,6 +122,7 @@ public class TrafficMgr implements NetCoreIface.IListener{
 
             return 1;
         }
+
         return NetCoreIface.startVpn(context);
     }
 

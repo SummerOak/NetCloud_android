@@ -21,7 +21,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.summer.netcloud.utils.Log;
 import com.summer.netcore.Config;
 import com.summer.netcore.VpnConfig;
 import com.summer.netcloud.ContextMgr;
@@ -450,10 +449,24 @@ public class TrafficCtrlWindow extends AbsListContentWindow<TrafficCtrlWindow.Ct
                 mIcon.setImageDrawable(appInfo.icon);
                 mIcon.setVisibility(VISIBLE);
                 mAppName.setText(appInfo.name);
+            }else{
+                mAppName.setText(PackageUtils.getDefaultAppName(uid));
+                mIcon.setImageResource(PackageUtils.getDefaultAppIcon(uid));
             }
 
             mDelete.setVisibility(mEditMode?VISIBLE:INVISIBLE);
             mCtrl.setVisibility(!mEditMode?VISIBLE:INVISIBLE);
+            if(mEditMode){
+                if(uid > 0){
+                    mDelete.setTextColor(ResTools.getColor(R.color.blue));
+                    mDelete.setBackgroundResource(R.drawable.button_blue);
+                    mDelete.setEnabled(true);
+                }else{
+                    mDelete.setTextColor(ResTools.getColor(R.color.gray));
+                    mDelete.setBackgroundResource(R.drawable.button_gray);
+                    mDelete.setEnabled(false);
+                }
+            }
         }
 
         public void bindHost(String host){
@@ -461,6 +474,10 @@ public class TrafficCtrlWindow extends AbsListContentWindow<TrafficCtrlWindow.Ct
             mIcon.setVisibility(GONE);
             mDelete.setVisibility(mEditMode?VISIBLE:INVISIBLE);
             mCtrl.setVisibility(!mEditMode?VISIBLE:INVISIBLE);
+            if(mEditMode){
+                mDelete.setTextColor(ResTools.getColor(R.color.blue));
+                mDelete.setBackgroundResource(R.drawable.button_blue);
+            }
         }
 
         @Override

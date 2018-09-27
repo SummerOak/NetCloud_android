@@ -257,7 +257,6 @@ public class SettingsWindow extends AbsListContentWindow<Integer,SettingsWindow.
 
             this.setBackgroundResource(R.drawable.list_item_bg);
             this.setMinimumHeight((int)ResTools.getDimen(R.dimen.item_height));
-            this.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,  ViewGroup.LayoutParams.WRAP_CONTENT));
             int hp = (int)ResTools.getDimen(R.dimen.hor_padding);
             int vp = (int)ResTools.getDimen(R.dimen.vtl_padding);
             this.setPadding(hp,vp,hp,vp);

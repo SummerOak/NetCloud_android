@@ -7,9 +7,9 @@
         </shape>
     </item>
 
-    <item
-        android:drawable="@drawable/summer"
-        android:gravity="center"
-        />
+    <item>
+        <bitmap android:src="@drawable/summer"
+            android:gravity="center" />
+    </item>
 
 </layer-list>

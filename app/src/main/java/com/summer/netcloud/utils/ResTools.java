@@ -13,7 +13,7 @@ public class ResTools {
     }
 
     public static final int getColor(int resId){
-        return ContextMgr.getContext().getResources().getColor(resId,null);
+        return ContextMgr.getContext().getResources().getColor(resId);
     }
 
 }

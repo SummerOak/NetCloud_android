@@ -7,6 +7,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.TextView;
 
 import com.summer.crashsdk.CrashSDK;
@@ -70,7 +71,7 @@ public class CrashRecordWindow extends AbsListContentWindow<String, TextView> im
         int vp = (int)ResTools.getDimen(R.dimen.vtl_padding);
         v.setPadding(hp,vp,hp,vp);
         v.setOnClickListener(CrashRecordWindow.this);
-        v.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,  (int)ResTools.getDimen(R.dimen.item_height)));
+        v.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,  (int)ResTools.getDimen(R.dimen.item_height)));
         v.setBackgroundResource(R.drawable.list_item_bg);
 
         return v;

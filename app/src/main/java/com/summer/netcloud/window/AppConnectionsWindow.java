@@ -280,7 +280,6 @@ public class AppConnectionsWindow extends AbsListContentWindow<ConnInfo, AppConn
             mMask.setBackgroundResource(R.drawable.list_item_normal_died);
             addView(mMask, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-            setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             setBackgroundResource(R.drawable.list_item_normal);
 
             int hp = (int)ResTools.getDimen(R.dimen.hor_padding);

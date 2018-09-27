@@ -2,6 +2,7 @@ package com.summer.netcloud.window;
 
 import android.content.Context;
 import android.os.Process;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
