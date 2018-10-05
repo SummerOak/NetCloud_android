@@ -51,8 +51,6 @@ public class NetWatcherApp extends Application implements IMsgListener{
         MsgDispatcher.get().registerMsg(Messege.VPN_STOP, this);
         MsgDispatcher.get().registerMsg(Messege.VPN_START, this);
         MsgDispatcher.get().registerMsg(Messege.START_UP_FINISHED, this);
-
-        startPersistentService(this);
     }
 
     public static final boolean isFirstLaunch(){
@@ -78,16 +76,14 @@ public class NetWatcherApp extends Application implements IMsgListener{
         }else if(msgId == Messege.START_UP_FINISHED){
             SharedPreferences settings = getSharedPreferences(SP_FIRST_LAUNCH, 0);
             settings.edit().putInt(SP_FIRST_LAUNCH, FIRST_LAUNCH_NO).commit();
+
+            startPersistentService(this);
         }
     }
 
     @Override
     public Object onSyncMessage(int msgId, Object arg) {
-        if(msgId == Messege.VPN_STOP){
-            startPersistentService(this);
-        }else if(msgId == Messege.VPN_START){
-            startPersistentService(this);
-        }
+        onMessage(msgId, arg);
 
         return null;
     }

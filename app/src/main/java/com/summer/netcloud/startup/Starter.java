@@ -62,7 +62,7 @@ public class Starter {
                 mTasks.removeAll(ready);
 
                 for(Task task :ready){
-                    Log.e(TAG, "execute: " + task.getClass().getName());
+                    Log.d(TAG, "execute: " + task.getClass().getName());
                     task.action();
                 }
             }

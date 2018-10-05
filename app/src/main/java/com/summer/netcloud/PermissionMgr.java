@@ -37,7 +37,7 @@ public class PermissionMgr implements IMsgListener{
         mVpnListener = null;
         Activity activity = (Activity)ContextMgr.getContext();
         if(activity != null){
-            Intent intent = VpnServer.prepare(activity);
+            Intent intent = VpnServer.prepare(ContextMgr.getApplicationContext());
             if (intent != null) {
                 Log.e(TAG, "requesting vpn permission...");
                 mVpnListener = new WeakReference<>(listener);
