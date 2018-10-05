@@ -9,7 +9,7 @@ import com.summer.netcloud.utils.Log;
  * Created by summer on 13/06/2018.
  */
 
-public class ShowSplash extends Starter.Step {
+public class ShowSplash extends Starter.Task {
     private static final String TAG = Constants.TAG + ".ShowSplash";
 
     @Override

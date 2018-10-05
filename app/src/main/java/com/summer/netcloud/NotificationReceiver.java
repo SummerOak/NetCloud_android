@@ -21,7 +21,7 @@ public class NotificationReceiver extends Activity {
         if(NetCoreIface.isServerRunning()){
             TrafficMgr.getInstance().stop();
         }else{
-            TrafficMgr.getInstance().start(this);
+            TrafficMgr.getInstance().start();
         }
 
         finish();

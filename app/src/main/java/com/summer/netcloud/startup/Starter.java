@@ -15,45 +15,68 @@ import java.util.Set;
 public class Starter {
     private static final String TAG = Constants.TAG + ".Starter";
 
-    private Set<Step> mSteps = new HashSet<>();
-    private Step mCurStep;
+    private Set<Task> mTasks = new HashSet<>();
+    private Set<Task> mTaskHolder = new HashSet<>();
+    private Task mCurTask;
+    private static Starter sInstance = null;
+
 
     public Starter(){
 
-        add(new ShowMainPage()).depends(new ShowSplash())
-        .add(new InitCore());
+        mTasks.clear();
+        mTaskHolder.clear();
+        mCurTask = null;
 
+        ShowMainPage showMainPage = new ShowMainPage();
+        ShowSplash showSplash = new ShowSplash();
+        InitCore initCore = new InitCore();
+        PermissionAcquire permissionAcquire = new PermissionAcquire();
+
+
+        add(showSplash).depends(permissionAcquire)
+        .add(showMainPage).depends(showSplash,initCore)
+        .add(initCore).depends(permissionAcquire);
+
+        mTaskHolder.addAll(mTasks);
     }
 
-    public void startup(){
-        check();
+    public static void startup(){
+        if(sInstance == null){
+            sInstance = new Starter();
+        }
+
+        sInstance.check();
     }
 
     private void check(){
 
-        if(!mSteps.isEmpty()){
-            Set<Step> ready = new HashSet<>();
-            for(Step step:mSteps){
-                if(step.prevs.isEmpty()){
-                    ready.add(step);
+        if(!mTasks.isEmpty()){
+            Set<Task> ready = new HashSet<>();
+            for(Task task : mTasks){
+                if(task.prevs.isEmpty()){
+                    ready.add(task);
                 }
             }
 
             if(!ready.isEmpty()){
-                mSteps.removeAll(ready);
-                for(Step step:ready){
-                    step.action();
+                mTasks.removeAll(ready);
+
+                for(Task task :ready){
+                    Log.e(TAG, "execute: " + task.getClass().getName());
+                    task.action();
                 }
             }
         }else{
+            sInstance = null;
+            mTaskHolder.clear();
             MsgDispatcher.get().dispatch(Messege.START_UP_FINISHED);
         }
     }
 
-    private void onFinish(Step step){
-        if(!step.nexts.isEmpty()){
-            for(Step s:step.nexts){
-                s.prevs.remove(step);
+    private void onFinish(Task task){
+        if(!task.nexts.isEmpty()){
+            for(Task s: task.nexts){
+                s.prevs.remove(task);
             }
         }
 
@@ -62,7 +85,7 @@ public class Starter {
     }
 
 
-    public static abstract class Step{
+    public static abstract class Task {
 
         private Starter starter;
 
@@ -87,47 +110,47 @@ public class Starter {
             starter.onFinish(this);
         }
 
-        private Set<Step> nexts = new HashSet<>();
-        private Set<Step> prevs = new HashSet<>();
+        private Set<Task> nexts = new HashSet<>();
+        private Set<Task> prevs = new HashSet<>();
 
-        private void depends(Step step){
-            if(!prevs.contains(step)){
-                prevs.add(step);
+        private void depends(Task task){
+            if(!prevs.contains(task)){
+                prevs.add(task);
             }
         }
 
-        private void nexts(Step step){
-            if(!nexts.contains(step)){
-                nexts.add(step);
+        private void nexts(Task task){
+            if(!nexts.contains(task)){
+                nexts.add(task);
             }
         }
     }
 
 
-    public Starter add(Step step){
-        if(!mSteps.contains(step)){
-            mSteps.add(step);
-            step.starter = this;
+    public Starter add(Task task){
+        if(!mTasks.contains(task)){
+            mTasks.add(task);
+            task.starter = this;
         }
 
-        mCurStep = step;
+        mCurTask = task;
 
         return this;
     }
 
-    public Starter depends(Step... steps){
-        if(mCurStep == null){
-            throw new IllegalStateException("steps can not depends on empty steps!");
+    public Starter depends(Task... tasks){
+        if(mCurTask == null){
+            throw new IllegalStateException("tasks can not depends on empty tasks!");
         }
 
-        if(steps != null && steps.length > 0){
-            for(Step step:steps){
-                mCurStep.depends(step);
-                step.nexts(mCurStep);
+        if(tasks != null && tasks.length > 0){
+            for(Task task : tasks){
+                mCurTask.depends(task);
+                task.nexts(mCurTask);
 
-                if(!mSteps.contains(step)){
-                    mSteps.add(step);
-                    step.starter = this;
+                if(!mTasks.contains(task)){
+                    mTasks.add(task);
+                    task.starter = this;
                 }
             }
         }

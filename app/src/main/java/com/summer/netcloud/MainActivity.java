@@ -2,6 +2,7 @@ package com.summer.netcloud;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.summer.netcore.VpnConfig;
@@ -15,12 +16,15 @@ import com.summer.netcloud.window.AppConnectionsWindow;
 import com.summer.netcloud.window.TCPLogsWindow;
 import com.summer.netcloud.window.TrafficCtrlWindow;
 import com.summer.netcloud.window.WindowStack;
+import com.summer.netcore.VpnServer;
 
 public class MainActivity extends Activity implements IMsgListener{
 
     private WindowStack mEnv;
 
     public static final String ACT_OPEN_WINDOW_STRATEGY_CTRL = "intent_action_openwindow";
+
+    public static final int ACT_REQ_CODE_VPN_PERMISSION = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +42,7 @@ public class MainActivity extends Activity implements IMsgListener{
         MsgDispatcher.get().registerMsg(Messege.SHOW_CONN_LOGS, this);
         MsgDispatcher.get().registerMsg(Messege.START_UP_FINISHED,this);
 
-        new Starter().startup();
+        Starter.startup();
     }
 
     @Override
@@ -63,6 +67,18 @@ public class MainActivity extends Activity implements IMsgListener{
         checkIntent(intent);
 
         super.onNewIntent(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            MsgDispatcher.get().dispatchSync(Messege.ACTIVITY_RESULT_OK, requestCode);
+        }else{
+            MsgDispatcher.get().dispatchSync(Messege.ACTIVITY_RESULT_NO, requestCode);
+        }
+
     }
 
     private void checkIntent(Intent intent){
@@ -122,7 +138,7 @@ public class MainActivity extends Activity implements IMsgListener{
 
     @Override
     protected void onDestroy() {
-
+        ContextMgr.setContext(null);
         MsgDispatcher.get().unregisterMsg(Messege.BACK_PRESSED,this);
         MsgDispatcher.get().unregisterMsg(Messege.PUSH_WINDOW,this);
         MsgDispatcher.get().unregisterMsg(Messege.POP_WINDOW,this);

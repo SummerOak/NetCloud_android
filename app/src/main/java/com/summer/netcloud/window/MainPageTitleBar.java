@@ -1,5 +1,6 @@
 package com.summer.netcloud.window;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Process;
 import android.util.Log;
@@ -116,7 +117,7 @@ public class MainPageTitleBar implements IMsgListener, View.OnClickListener{
                 if(TrafficMgr.getInstance().isEnable()){
                     TrafficMgr.getInstance().stop();
                 }else{
-                    TrafficMgr.getInstance().start(mTitlebar.getContext());
+                    TrafficMgr.getInstance().start();
                 }
             }
 

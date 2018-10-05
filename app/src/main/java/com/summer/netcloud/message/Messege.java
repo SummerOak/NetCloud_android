@@ -18,4 +18,8 @@ public class Messege {
 
     public static final int START_UP_FINISHED = 10;
 
+    public static final int ACTIVITY_RESULT_OK = 11;
+    public static final int ACTIVITY_RESULT_NO = 12;
+
+
 }

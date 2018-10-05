@@ -8,7 +8,7 @@ import com.summer.netcloud.utils.Log;
  * Created by summer on 13/06/2018.
  */
 
-public class InitCore extends Starter.Step {
+public class InitCore extends Starter.Task {
     private static final String TAG = Constants.TAG + ".InitCore";
 
     @Override

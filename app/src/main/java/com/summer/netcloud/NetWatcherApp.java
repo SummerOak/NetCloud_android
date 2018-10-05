@@ -30,7 +30,14 @@ public class NetWatcherApp extends Application implements IMsgListener{
     public static final int NOTIFICATION_ID = 1;
     private static final String NOTIFICATION_CHANNEL_ID = "NetCloud";
 
-    private static byte sFirstLaunch = 0;
+    private static final int FIRST_LAUNCH_NOT_INIT_YET = 0;
+    private static final int FIRST_LAUNCH_YES = 1;
+    private static final int FIRST_LAUNCH_NO = 2;
+    private static byte sFirstLaunch = FIRST_LAUNCH_NOT_INIT_YET;//0: not init yet; 1: first launch; 2: not first launch;
+
+    private static final String SP_FIRST_LAUNCH = "first_launch";
+
+
 
     @Override
     public void onCreate() {
@@ -43,22 +50,20 @@ public class NetWatcherApp extends Application implements IMsgListener{
 
         MsgDispatcher.get().registerMsg(Messege.VPN_STOP, this);
         MsgDispatcher.get().registerMsg(Messege.VPN_START, this);
+        MsgDispatcher.get().registerMsg(Messege.START_UP_FINISHED, this);
 
         startPersistentService(this);
     }
 
     public static final boolean isFirstLaunch(){
 
-        if(sFirstLaunch == 0){
+        if(sFirstLaunch == FIRST_LAUNCH_NOT_INIT_YET){
             Context context = ContextMgr.getApplicationContext();
-            SharedPreferences settings = context.getSharedPreferences("first_launch", 0);
-            sFirstLaunch = (byte)settings.getInt("first_launch", 1);
-            if (sFirstLaunch == 1) {
-                settings.edit().putInt("first_launch", 2).commit();
-            }
+            SharedPreferences settings = context.getSharedPreferences(SP_FIRST_LAUNCH, 0);
+            sFirstLaunch = (byte)settings.getInt(SP_FIRST_LAUNCH, FIRST_LAUNCH_YES);
         }
 
-        return sFirstLaunch == 1;
+        return sFirstLaunch == FIRST_LAUNCH_YES;
     }
 
     @Override
@@ -70,6 +75,9 @@ public class NetWatcherApp extends Application implements IMsgListener{
             if(content != null){
                 startPersistentService(this);
             }
+        }else if(msgId == Messege.START_UP_FINISHED){
+            SharedPreferences settings = getSharedPreferences(SP_FIRST_LAUNCH, 0);
+            settings.edit().putInt(SP_FIRST_LAUNCH, FIRST_LAUNCH_NO).commit();
         }
     }
 
@@ -104,8 +112,6 @@ public class NetWatcherApp extends Application implements IMsgListener{
 
             Notification.Builder builder = getNotificationBuilder(ctx, NOTIFICATION_CHANNEL_ID, NotificationManager.IMPORTANCE_DEFAULT);
             Intent notificationIntent = new Intent(ctx.getApplicationContext(), MainActivity.class);
-            notificationIntent.setAction(Intent.ACTION_MAIN);
-            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             PendingIntent contentPendingIntent = PendingIntent.getActivity(ctx, 0, notificationIntent, 0);
 
             builder.setSmallIcon(R.drawable.icon_ntf)

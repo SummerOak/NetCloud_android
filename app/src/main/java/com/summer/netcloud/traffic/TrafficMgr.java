@@ -1,23 +1,28 @@
 package com.summer.netcloud.traffic;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
+import android.provider.Settings;
 import android.util.Pair;
 import android.util.SparseArray;
+import android.widget.Toast;
 
-import com.summer.netcloud.utils.JobScheduler;
-import com.summer.netcloud.utils.PackageUtils;
-import com.summer.netcore.Config;
-import com.summer.netcore.NetCoreIface;
-import com.summer.netcore.VpnConfig;
 import com.summer.netcloud.Constants;
 import com.summer.netcloud.ContextMgr;
 import com.summer.netcloud.MainActivity;
 import com.summer.netcloud.NetWatcherApp;
+import com.summer.netcloud.PermissionMgr;
 import com.summer.netcloud.message.Messege;
 import com.summer.netcloud.message.MsgDispatcher;
+import com.summer.netcloud.utils.JobScheduler;
 import com.summer.netcloud.utils.Listener;
 import com.summer.netcloud.utils.Log;
+import com.summer.netcloud.utils.PackageUtils;
+import com.summer.netcloud.utils.SystemUtils;
+import com.summer.netcore.Config;
+import com.summer.netcore.NetCoreIface;
+import com.summer.netcore.VpnConfig;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,7 +33,7 @@ import java.util.Map;
  * Created by summer on 14/06/2018.
  */
 
-public class TrafficMgr implements NetCoreIface.IListener{
+public class TrafficMgr implements NetCoreIface.IListener, PermissionMgr.IPermissionListener{
 
     private static final String TAG = Constants.TAG + ".TrafficMgr";
 
@@ -40,11 +45,14 @@ public class TrafficMgr implements NetCoreIface.IListener{
     private SparseArray<List<ConnInfo>> mUID2Conns = new SparseArray<>();
     private SparseArray<Integer> mUID2ConnNum = new SparseArray<>();
     private long mTotalConns = 0L;
+    private boolean mHadRequestIgnoreBatteryOpt = false;
 
     private final int MAX_RETAIN_CONN_SIZE = 50;
 
 
     private boolean mEnable = false;
+
+    private boolean mPendingStart = false;
 
 
     public static final TrafficMgr getInstance(){
@@ -115,18 +123,14 @@ public class TrafficMgr implements NetCoreIface.IListener{
         });
     }
 
-    public int start(Context context){
-        if(isCtrlSetEmpty()){
-            Intent intent = new Intent(context, MainActivity.class);
-            context.startActivity(intent);
+    public int start(){
 
-            return 1;
-        }
-
-        return NetCoreIface.startVpn(context);
+        mPendingStart = true;
+        return PermissionMgr.get().ensureVpnPermission(this);
     }
 
     public int stop(){
+        mPendingStart = false;
         return NetCoreIface.stopVpn(ContextMgr.getApplicationContext());
     }
 
@@ -372,6 +376,44 @@ public class TrafficMgr implements NetCoreIface.IListener{
 
         for(ITrafficListener lr: mListeners.alive()){
             lr.onTrafficRecv(i,l, total, flag);
+        }
+    }
+
+    @Override
+    public void onPermissionGranted() {
+        if(mPendingStart){
+            mPendingStart = false;
+
+            Activity activity = (Activity)ContextMgr.getContext();
+            if(activity != null){
+                if(isCtrlSetEmpty()){
+                    Intent intent = new Intent(activity, MainActivity.class);
+                    activity.startActivity(intent);
+
+                    return;
+                }
+
+                if (!mHadRequestIgnoreBatteryOpt && SystemUtils.batteryOptimizing()){
+                    final Intent doze = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                    doze.setData(Uri.parse("package:" + activity.getPackageName()));
+                    if(activity.getPackageManager().resolveActivity(doze, 0) != null){
+                        activity.startActivity(doze);
+                    }
+
+                    mHadRequestIgnoreBatteryOpt = true;
+                }
+
+                NetCoreIface.startVpn(activity);
+            }
+
+        }
+    }
+
+    @Override
+    public void onPermissionDenied() {
+        if(mPendingStart){
+            Toast.makeText(ContextMgr.getApplicationContext(), "start failed, vpn permission is necessary.", Toast.LENGTH_LONG).show();
+            mPendingStart = false;
         }
     }
 

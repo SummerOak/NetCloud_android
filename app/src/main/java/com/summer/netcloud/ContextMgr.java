@@ -16,8 +16,14 @@ public class ContextMgr {
 
 
     public static void setContext(Context context){
-        sContext = new WeakReference<>(context);
-        sAppContext = context.getApplicationContext();
+        if(context != null){
+            sContext = new WeakReference<>(context);
+            sAppContext = context.getApplicationContext();
+        }else{
+            sContext = null;
+            sAppContext = null;
+        }
+
     }
 
     public static Context getContext(){
