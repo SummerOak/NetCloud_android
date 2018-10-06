@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.summer.netcloud.utils.SystemUtils;
 import com.summer.netcore.Config;
 import com.summer.netcore.IPUtils;
 import com.summer.netcore.VpnConfig;
@@ -34,6 +35,7 @@ public class SettingsWindow extends AbsListContentWindow<Integer,SettingsWindow.
     private static final int SETTING_PROXY_ADDR = 3;
     private static final int SETTING_CRASH_RECORDS = 4;
     private static final int SETTING_CAPTURE_DIR = 5;
+    private static final int SETTING_ABOUT = 6;
 
     private static HostInputDialog mHostInputDialog;
     private static HostAndPortInputDialog mHostAndPortDialog;
@@ -50,6 +52,7 @@ public class SettingsWindow extends AbsListContentWindow<Integer,SettingsWindow.
         mSettings.add(SETTING_PROXY_ADDR);
         mSettings.add(SETTING_CAPTURE_DIR);
         mSettings.add(SETTING_CRASH_RECORDS);
+        mSettings.add(SETTING_ABOUT);
 
         updateData(mSettings);
     }
@@ -119,6 +122,10 @@ public class SettingsWindow extends AbsListContentWindow<Integer,SettingsWindow.
             }
             case SETTING_CRASH_RECORDS:{
                 view.setTitle("Crash records", null);
+                break;
+            }
+            case SETTING_ABOUT:{
+                view.setTitle("About ", null);
                 break;
             }
         }
@@ -221,6 +228,9 @@ public class SettingsWindow extends AbsListContentWindow<Integer,SettingsWindow.
                 }
                 case SETTING_CRASH_RECORDS:{
                     MsgDispatcher.get().dispatchSync(Messege.PUSH_WINDOW, new CrashRecordWindow(ContextMgr.getContext()));
+                    break;
+                }case SETTING_ABOUT:{
+                    Toast.makeText(getContext(), "NetCloud " + SystemUtils.getLocalVersionName(getContext()), Toast.LENGTH_SHORT).show();
                     break;
                 }
             }
