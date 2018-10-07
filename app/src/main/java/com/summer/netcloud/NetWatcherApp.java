@@ -44,7 +44,7 @@ public class NetWatcherApp extends Application implements IMsgListener{
         super.onCreate();
 
         CrashSDK.init(getApplicationContext());
-        ContextMgr.setContext(getApplicationContext());
+        ContextMgr.setApplicationContext(getApplicationContext());
         JobScheduler.init();
         TrafficMgr.getInstance().init();
 
