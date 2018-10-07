@@ -2,10 +2,8 @@ package com.summer.netcloud;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 
-import com.summer.netcore.VpnConfig;
 import com.summer.netcloud.message.IMsgListener;
 import com.summer.netcloud.message.Messege;
 import com.summer.netcloud.message.MsgDispatcher;
@@ -16,7 +14,7 @@ import com.summer.netcloud.window.AppConnectionsWindow;
 import com.summer.netcloud.window.TCPLogsWindow;
 import com.summer.netcloud.window.TrafficCtrlWindow;
 import com.summer.netcloud.window.WindowStack;
-import com.summer.netcore.VpnServer;
+import com.summer.netcore.VpnConfig;
 
 public class MainActivity extends Activity implements IMsgListener{
 

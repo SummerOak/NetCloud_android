@@ -1,6 +1,7 @@
 package com.summer.netcloud;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 
 import com.summer.netcloud.message.IMsgListener;
@@ -35,20 +36,26 @@ public class PermissionMgr implements IMsgListener{
 
     public int ensureVpnPermission(IPermissionListener listener){
         mVpnListener = null;
-        Activity activity = (Activity)ContextMgr.getContext();
-        if(activity != null){
-            Intent intent = VpnServer.prepare(ContextMgr.getApplicationContext());
-            if (intent != null) {
-                Log.e(TAG, "requesting vpn permission...");
-                mVpnListener = new WeakReference<>(listener);
+        Intent intent = VpnServer.prepare(ContextMgr.getApplicationContext());
+        if (intent != null) {
+            Log.e(TAG, "requesting vpn permission...");
+            mVpnListener = new WeakReference<>(listener);
+            Activity activity = (Activity)ContextMgr.getContext();
+            if(activity != null){
                 activity.startActivityForResult(intent, MainActivity.ACT_REQ_CODE_VPN_PERMISSION);
-                return 1;
             }else{
-                if(listener != null){
-                    listener.onPermissionGranted();
-                }
+                Context appContext = ContextMgr.getApplicationContext();
+                Intent main = new Intent(appContext, MainActivity.class);
+                appContext.startActivity(main);
+            }
+
+            return 1;
+        }else{
+            if(listener != null){
+                listener.onPermissionGranted();
             }
         }
+
         return 0;
     }
 

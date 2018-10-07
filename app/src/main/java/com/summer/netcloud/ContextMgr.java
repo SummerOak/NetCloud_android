@@ -28,7 +28,7 @@ public class ContextMgr {
     }
 
     public static Context getContext(){
-        return sContext.get();
+        return sContext==null?null:sContext.get();
     }
 
     public static Context getApplicationContext(){

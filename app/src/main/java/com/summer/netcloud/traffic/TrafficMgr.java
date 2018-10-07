@@ -1,6 +1,6 @@
 package com.summer.netcloud.traffic;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
@@ -384,26 +384,26 @@ public class TrafficMgr implements NetCoreIface.IListener, PermissionMgr.IPermis
         if(mPendingStart){
             mPendingStart = false;
 
-            Activity activity = (Activity)ContextMgr.getContext();
-            if(activity != null){
+            Context context = ContextMgr.getApplicationContext();
+            if(context != null){
                 if(isCtrlSetEmpty()){
-                    Intent intent = new Intent(activity, MainActivity.class);
-                    activity.startActivity(intent);
+                    Intent intent = new Intent(context, MainActivity.class);
+                    context.startActivity(intent);
 
                     return;
                 }
 
                 if (!mHadRequestIgnoreBatteryOpt && SystemUtils.batteryOptimizing()){
                     final Intent doze = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                    doze.setData(Uri.parse("package:" + activity.getPackageName()));
-                    if(activity.getPackageManager().resolveActivity(doze, 0) != null){
-                        activity.startActivity(doze);
+                    doze.setData(Uri.parse("package:" + context.getPackageName()));
+                    if(context.getPackageManager().resolveActivity(doze, 0) != null){
+                        context.startActivity(doze);
                     }
 
                     mHadRequestIgnoreBatteryOpt = true;
                 }
 
-                NetCoreIface.startVpn(activity);
+                NetCoreIface.startVpn(context);
             }
 
         }

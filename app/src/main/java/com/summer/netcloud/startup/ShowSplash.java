@@ -3,6 +3,7 @@ package com.summer.netcloud.startup;
 import android.os.Handler;
 
 import com.summer.netcloud.Constants;
+import com.summer.netcloud.ContextMgr;
 import com.summer.netcloud.utils.Log;
 
 /**
