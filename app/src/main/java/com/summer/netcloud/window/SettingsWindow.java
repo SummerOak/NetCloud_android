@@ -1,7 +1,10 @@
 package com.summer.netcloud.window;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
+import android.provider.Settings;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -11,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.summer.netcloud.NotificationReceiver;
+import com.summer.netcloud.PersistentService;
 import com.summer.netcloud.utils.SystemUtils;
 import com.summer.netcore.Config;
 import com.summer.netcore.IPUtils;
@@ -36,6 +41,8 @@ public class SettingsWindow extends AbsListContentWindow<Integer,SettingsWindow.
     private static final int SETTING_CRASH_RECORDS = 4;
     private static final int SETTING_CAPTURE_DIR = 5;
     private static final int SETTING_ABOUT = 6;
+    private static final int SETTING_ENHANCE_BACKGROUN_RUNNING = 7;
+
 
     private static HostInputDialog mHostInputDialog;
     private static HostAndPortInputDialog mHostAndPortDialog;
@@ -51,6 +58,7 @@ public class SettingsWindow extends AbsListContentWindow<Integer,SettingsWindow.
         mSettings.add(SETTING_DNS_SERVER);
         mSettings.add(SETTING_PROXY_ADDR);
         mSettings.add(SETTING_CAPTURE_DIR);
+        mSettings.add(SETTING_ENHANCE_BACKGROUN_RUNNING);
         mSettings.add(SETTING_CRASH_RECORDS);
         mSettings.add(SETTING_ABOUT);
 
@@ -118,6 +126,10 @@ public class SettingsWindow extends AbsListContentWindow<Integer,SettingsWindow.
                 String capDir = VpnConfig.getConfig(Config.CAP_OUTPUT_DIR, "not set");
                 view.setTitle("Capture output directory", capDir);
 
+                break;
+            }
+            case SETTING_ENHANCE_BACKGROUN_RUNNING:{
+                view.setTitle("Enhance background running", SystemUtils.batteryOptimizing()?"enhanced":null);
                 break;
             }
             case SETTING_CRASH_RECORDS:{
@@ -230,7 +242,15 @@ public class SettingsWindow extends AbsListContentWindow<Integer,SettingsWindow.
                     MsgDispatcher.get().dispatchSync(Messege.PUSH_WINDOW, new CrashRecordWindow(ContextMgr.getContext()));
                     break;
                 }case SETTING_ABOUT:{
-                    Toast.makeText(getContext(), "NetCloud " + SystemUtils.getLocalVersionName(getContext()), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "NetCloud " + SystemUtils.getLocalVersionName(getContext())
+                            , Toast.LENGTH_SHORT).show();
+                    break;
+                }case SETTING_ENHANCE_BACKGROUN_RUNNING:{
+                    final Intent doze = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                    doze.setData(Uri.parse("package:" + getContext().getPackageName()));
+                    if(getContext().getPackageManager().resolveActivity(doze, 0) != null){
+                        getContext().startActivity(doze);
+                    }
                     break;
                 }
             }

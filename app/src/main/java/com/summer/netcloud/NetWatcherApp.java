@@ -69,10 +69,7 @@ public class NetWatcherApp extends Application implements IMsgListener{
         if(msgId == Messege.VPN_STOP){
             startPersistentService(this);
         }else if(msgId == Messege.VPN_START){
-            RemoteViews content = sNotification.contentView;
-            if(content != null){
-                startPersistentService(this);
-            }
+            startPersistentService(this);
         }else if(msgId == Messege.START_UP_FINISHED){
             SharedPreferences settings = getSharedPreferences(SP_FIRST_LAUNCH, 0);
             settings.edit().putInt(SP_FIRST_LAUNCH, FIRST_LAUNCH_NO).commit();
@@ -96,41 +93,43 @@ public class NetWatcherApp extends Application implements IMsgListener{
         } else {
             context.startService(intent);
         }
+
     }
 
-    public static Notification buildNotification(){
+    public static Notification getNotification(){
         if(sNotification != null){
             return sNotification;
         }
 
-            Context ctx = ContextMgr.getApplicationContext();
-            RemoteViews content = new RemoteViews(ctx.getPackageName(), R.layout.notification_layout);
+        Context ctx = ContextMgr.getApplicationContext();
+        RemoteViews content = new RemoteViews(ctx.getPackageName(), R.layout.notification_layout);
 
-            Notification.Builder builder = getNotificationBuilder(ctx, NOTIFICATION_CHANNEL_ID, NotificationManager.IMPORTANCE_DEFAULT);
-            Intent notificationIntent = new Intent(ctx.getApplicationContext(), MainActivity.class);
-            PendingIntent contentPendingIntent = PendingIntent.getActivity(ctx, 0, notificationIntent, 0);
+        Notification.Builder builder = getNotificationBuilder(ctx, NOTIFICATION_CHANNEL_ID, NotificationManager.IMPORTANCE_DEFAULT);
+        Intent notificationIntent = new Intent(ctx.getApplicationContext(), MainActivity.class);
+        PendingIntent contentPendingIntent = PendingIntent.getActivity(ctx, 0, notificationIntent, 0);
 
-            builder.setSmallIcon(R.drawable.icon_ntf)
-                .setContentIntent(contentPendingIntent)
-                .setOngoing(true)
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setOnlyAlertOnce(true);
+        builder.setSmallIcon(R.drawable.icon_ntf)
+            .setContentIntent(contentPendingIntent)
+            .setAutoCancel(false)
+            .setOngoing(true)
+            .setDefaults(Notification.DEFAULT_ALL)
+            .setOnlyAlertOnce(true);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                sNotification = builder.build();
-            }else{
-                sNotification = builder.getNotification();
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            sNotification = builder.build();
+        }else{
+            sNotification = builder.getNotification();
+        }
 
 
-            Intent ntfReceiver = new Intent(ctx, NotificationReceiver.class);
-            ntfReceiver.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            ntfReceiver.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, ntfReceiver, 0);
-            content.setOnClickPendingIntent(R.id.netcloud_notify_button, pendingIntent);
+        Intent ntfReceiver = new Intent(ctx, NotificationReceiver.class);
+        ntfReceiver.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        ntfReceiver.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, ntfReceiver, 0);
+        content.setOnClickPendingIntent(R.id.netcloud_notify_button, pendingIntent);
 
-            sNotification.contentView = content;
-            sNotification.flags = sNotification.flags | Notification.FLAG_NO_CLEAR;
+        sNotification.contentView = content;
+        sNotification.flags |= Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
 
         return sNotification;
     }

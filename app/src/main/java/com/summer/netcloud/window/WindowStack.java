@@ -64,6 +64,10 @@ public class WindowStack implements SwipeDectector.IListener{
     }
 
     public void push(AbsWindow window){
+        push(window, true);
+    }
+
+    public void push(AbsWindow window, boolean anim){
 
         if(window == null || mStack.contains(window)){
             return;
@@ -78,7 +82,9 @@ public class WindowStack implements SwipeDectector.IListener{
             }
         }
 
-        window.getView().startAnimation(mAnimIn);
+        if(anim){
+            window.getView().startAnimation(mAnimIn);
+        }
 
         mStack.push(window);
 

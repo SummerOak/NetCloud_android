@@ -35,6 +35,7 @@ public class MainActivity extends Activity implements IMsgListener{
 
         MsgDispatcher.get().registerMsg(Messege.BACK_PRESSED,this);
         MsgDispatcher.get().registerMsg(Messege.PUSH_WINDOW,this);
+        MsgDispatcher.get().registerMsg(Messege.PUSH_WINDOW_WITHOUT_ANIM, this);
         MsgDispatcher.get().registerMsg(Messege.POP_WINDOW,this);
         MsgDispatcher.get().registerMsg(Messege.SHOW_APP_CONNS_WINDOW,this);
         MsgDispatcher.get().registerMsg(Messege.SHOW_CONN_LOGS, this);
@@ -131,6 +132,10 @@ public class MainActivity extends Activity implements IMsgListener{
                 checkIntent(getIntent());
                 break;
             }
+            case Messege.PUSH_WINDOW_WITHOUT_ANIM:{
+                mEnv.push((AbsWindow)arg, false);
+                break;
+            }
         }
     }
 
@@ -139,24 +144,18 @@ public class MainActivity extends Activity implements IMsgListener{
         ContextMgr.setContext(null);
         MsgDispatcher.get().unregisterMsg(Messege.BACK_PRESSED,this);
         MsgDispatcher.get().unregisterMsg(Messege.PUSH_WINDOW,this);
+        MsgDispatcher.get().unregisterMsg(Messege.PUSH_WINDOW_WITHOUT_ANIM, this);
         MsgDispatcher.get().unregisterMsg(Messege.POP_WINDOW,this);
         MsgDispatcher.get().unregisterMsg(Messege.SHOW_APP_CONNS_WINDOW,this);
         MsgDispatcher.get().unregisterMsg(Messege.SHOW_CONN_LOGS, this);
+        MsgDispatcher.get().unregisterMsg(Messege.START_UP_FINISHED, this);
+
         super.onDestroy();
     }
 
     @Override
     public Object onSyncMessage(int msgId, Object arg) {
-        switch (msgId){
-            case Messege.PUSH_WINDOW:{
-                mEnv.push((AbsWindow)arg);
-                break;
-            }
-            case Messege.POP_WINDOW:{
-                mEnv.pop();
-                break;
-            }
-        }
+        onMessage(msgId, arg);
 
         return null;
     }

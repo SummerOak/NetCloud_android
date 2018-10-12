@@ -2,8 +2,6 @@ package com.summer.netcloud.traffic;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.provider.Settings;
 import android.util.Pair;
 import android.util.SparseArray;
 import android.widget.Toast;
@@ -19,7 +17,6 @@ import com.summer.netcloud.utils.JobScheduler;
 import com.summer.netcloud.utils.Listener;
 import com.summer.netcloud.utils.Log;
 import com.summer.netcloud.utils.PackageUtils;
-import com.summer.netcloud.utils.SystemUtils;
 import com.summer.netcore.Config;
 import com.summer.netcore.NetCoreIface;
 import com.summer.netcore.VpnConfig;
@@ -45,7 +42,6 @@ public class TrafficMgr implements NetCoreIface.IListener, PermissionMgr.IPermis
     private SparseArray<List<ConnInfo>> mUID2Conns = new SparseArray<>();
     private SparseArray<Integer> mUID2ConnNum = new SparseArray<>();
     private long mTotalConns = 0L;
-    private boolean mHadRequestIgnoreBatteryOpt = false;
 
     private final int MAX_RETAIN_CONN_SIZE = 50;
 
@@ -61,7 +57,7 @@ public class TrafficMgr implements NetCoreIface.IListener, PermissionMgr.IPermis
 
     public int init(){
         NetCoreIface.init(ContextMgr.getApplicationContext());
-        NetCoreIface.setForgroundNotifycation(NetWatcherApp.NOTIFICATION_ID, NetWatcherApp.buildNotification());
+        NetCoreIface.setForgroundNotifycation(NetWatcherApp.NOTIFICATION_ID, NetWatcherApp.getNotification());
         NetCoreIface.setListener(this);
 
         VpnConfig.addListener(new VpnConfig.IListener() {
@@ -391,16 +387,6 @@ public class TrafficMgr implements NetCoreIface.IListener, PermissionMgr.IPermis
                     context.startActivity(intent);
 
                     return;
-                }
-
-                if (!mHadRequestIgnoreBatteryOpt && SystemUtils.batteryOptimizing()){
-                    final Intent doze = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                    doze.setData(Uri.parse("package:" + context.getPackageName()));
-                    if(context.getPackageManager().resolveActivity(doze, 0) != null){
-                        context.startActivity(doze);
-                    }
-
-                    mHadRequestIgnoreBatteryOpt = true;
                 }
 
                 NetCoreIface.startVpn(context);

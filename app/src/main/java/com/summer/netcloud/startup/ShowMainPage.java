@@ -16,8 +16,6 @@ public class ShowMainPage extends Starter.Task {
 
         MsgDispatcher.get().dispatchSync(Messege.PUSH_WINDOW, new MainWindow(ContextMgr.getContext()));
 
-
-
         return 0;
     }
 

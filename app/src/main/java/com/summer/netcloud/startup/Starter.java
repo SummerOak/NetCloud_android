@@ -19,6 +19,7 @@ public class Starter {
     private Set<Task> mTaskHolder = new HashSet<>();
     private Task mCurTask;
     private static Starter sInstance = null;
+    static boolean sFirstLaunch = true;
 
 
     public Starter(){
@@ -69,7 +70,10 @@ public class Starter {
         }else{
             sInstance = null;
             mTaskHolder.clear();
-            MsgDispatcher.get().dispatch(Messege.START_UP_FINISHED);
+            if(sFirstLaunch){
+                MsgDispatcher.get().dispatch(Messege.START_UP_FINISHED);
+                sFirstLaunch = false;
+            }
         }
     }
 

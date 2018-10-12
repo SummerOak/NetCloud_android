@@ -15,6 +15,10 @@ public class ShowSplash extends Starter.Task {
 
     @Override
     protected int start() {
+        if(!Starter.sFirstLaunch){
+            return 0;
+        }
+
         Log.d(TAG,"show splash.");
 
         new Handler().postDelayed(new Runnable() {

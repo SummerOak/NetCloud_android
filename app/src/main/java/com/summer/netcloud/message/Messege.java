@@ -20,6 +20,7 @@ public class Messege {
 
     public static final int ACTIVITY_RESULT_OK = 11;
     public static final int ACTIVITY_RESULT_NO = 12;
+    public static final int PUSH_WINDOW_WITHOUT_ANIM = 13;
 
 
 }

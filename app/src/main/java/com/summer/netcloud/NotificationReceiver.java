@@ -12,6 +12,8 @@ import com.summer.netcloud.traffic.TrafficMgr;
 
 public class NotificationReceiver extends Activity {
 
+    public static final String ACT_REMOVE = "REMOVE";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
