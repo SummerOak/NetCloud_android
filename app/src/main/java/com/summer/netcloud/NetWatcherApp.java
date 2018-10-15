@@ -148,7 +148,7 @@ public class NetWatcherApp extends Application implements IMsgListener{
     @TargetApi(26)
     private static void prepareChannel(Context context, String id, int importance) {
         final String appName = context.getString(com.summer.netcore.R.string.app_name);
-        String description = "NetCloud";
+        String description = appName;
         final NotificationManager nm = (NotificationManager) context.getSystemService(Activity.NOTIFICATION_SERVICE);
 
         if(nm != null) {

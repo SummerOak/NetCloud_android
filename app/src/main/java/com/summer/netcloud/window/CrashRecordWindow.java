@@ -37,14 +37,14 @@ public class CrashRecordWindow extends AbsListContentWindow<String, TextView> im
     public CrashRecordWindow(Context context) {
         super(context);
 
-        setEmptyDescryption("No crash info.");
+        setEmptyDescryption(ResTools.getString(R.string.tips_none_crash));
     }
 
     @Override
     protected View getTitleBar() {
         if(mTitleBar == null){
             mTitleBar = new TitleBar(getContext());
-            mTitleBar.setTitle("Tombstones");
+            mTitleBar.setTitle(R.string.tombstones);
         }
 
         return mTitleBar;

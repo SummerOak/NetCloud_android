@@ -16,4 +16,8 @@ public class ResTools {
         return ContextMgr.getContext().getResources().getColor(resId);
     }
 
+    public static final String getString(int resId){
+        return ContextMgr.getApplicationContext().getResources().getString(resId);
+    }
+
 }

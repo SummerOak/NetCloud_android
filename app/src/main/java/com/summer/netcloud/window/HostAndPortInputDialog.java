@@ -64,7 +64,7 @@ public class HostAndPortInputDialog {
         TextView host = new TextView(mContext);
         host.setTextColor(ResTools.getColor(R.color.text));
         host.setTextSize(TypedValue.COMPLEX_UNIT_PX, ResTools.getDimen(R.dimen.textsize1));
-        host.setText("IP:");
+        host.setText(R.string.host);
         editCnt.addView(host);
 
         final EditText editText = new EditText(mContext);
@@ -86,7 +86,7 @@ public class HostAndPortInputDialog {
         TextView port = new TextView(mContext);
         port.setTextColor(ResTools.getColor(R.color.text));
         port.setTextSize(TypedValue.COMPLEX_UNIT_PX, ResTools.getDimen(R.dimen.textsize1));
-        port.setText("port:");
+        port.setText(R.string.port);
         lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.leftMargin = (int)ResTools.getDimen(R.dimen.hor_padding);
         editCnt.addView(port, lp);
@@ -108,7 +108,7 @@ public class HostAndPortInputDialog {
         cnt.addView(editCnt);
 
         TextView ok = new TextView(mContext);
-        ok.setText("OK");
+        ok.setText(R.string.done);
         ok.setGravity(Gravity.CENTER);
         ok.setBackgroundResource(R.drawable.button_blue);
         ok.setTextColor(ResTools.getColor(R.color.blue));

@@ -72,7 +72,7 @@ public class HostInputDialog {
         cnt.addView(editText);
 
         TextView ok = new TextView(mContext);
-        ok.setText("Add");
+        ok.setText(R.string.add);
         ok.setGravity(Gravity.CENTER);
         ok.setBackgroundResource(R.drawable.button_blue);
         ok.setTextColor(ResTools.getColor(R.color.blue));

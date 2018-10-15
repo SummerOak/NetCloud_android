@@ -14,17 +14,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.summer.netcloud.NotificationReceiver;
-import com.summer.netcloud.PersistentService;
-import com.summer.netcloud.utils.SystemUtils;
-import com.summer.netcore.Config;
-import com.summer.netcore.IPUtils;
-import com.summer.netcore.VpnConfig;
 import com.summer.netcloud.ContextMgr;
 import com.summer.netcloud.R;
 import com.summer.netcloud.message.Messege;
 import com.summer.netcloud.message.MsgDispatcher;
 import com.summer.netcloud.utils.ResTools;
+import com.summer.netcloud.utils.SystemUtils;
+import com.summer.netcore.Config;
+import com.summer.netcore.IPUtils;
+import com.summer.netcore.VpnConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +67,7 @@ public class SettingsWindow extends AbsListContentWindow<Integer,SettingsWindow.
     protected View getTitleBar() {
         if(mTitleBar == null){
             mTitleBar = new TitleBar(getContext());
-            mTitleBar.setTitle("Settings");
+            mTitleBar.setTitle(ResTools.getString(R.string.settings));
         }
         return mTitleBar;
     }
@@ -90,17 +88,17 @@ public class SettingsWindow extends AbsListContentWindow<Integer,SettingsWindow.
     protected void bindItem(Integer item, ItemView view) {
         switch (item){
             case SETTING_APPS_UNDER_CTRL:{
-                view.setTitle("Control Strategy", null);
+                view.setTitle(ResTools.getString(R.string.setting_ctrl), null);
                 break;
             }
             case SETTING_DNS_SERVER:{
                 String dnsAddr = VpnConfig.getConfig(Config.DNS_SERVER, "");
                 if(VpnConfig.isValidateHost(dnsAddr)){
-                    view.setTitle("DNS", dnsAddr);
+                    view.setTitle(ResTools.getString(R.string.setting_dns), dnsAddr);
                     break;
                 }
 
-                view.setTitle("DNS", "not set");
+                view.setTitle(ResTools.getString(R.string.setting_dns), ResTools.getString(R.string.setting_not_set));
 
                 break;
             }
@@ -111,33 +109,34 @@ public class SettingsWindow extends AbsListContentWindow<Integer,SettingsWindow.
                     try{
                         int port = Integer.valueOf(proxyPort);
                         if(0<=port && port<=65536){
-                            view.setTitle("Proxy server", proxyAddr+"/"+proxyPort);
+                            view.setTitle(ResTools.getString(R.string.setting_proxy_server), proxyAddr+"/"+proxyPort);
                             break;
                         }
                     }catch (Throwable t){
                         t.printStackTrace();
                     }
                 }
-                view.setTitle("Proxy server", "not set");
+                view.setTitle(ResTools.getString(R.string.setting_proxy_server), ResTools.getString(R.string.setting_not_set));
 
                 break;
             }
             case SETTING_CAPTURE_DIR:{
-                String capDir = VpnConfig.getConfig(Config.CAP_OUTPUT_DIR, "not set");
-                view.setTitle("Capture output directory", capDir);
+                String capDir = VpnConfig.getConfig(Config.CAP_OUTPUT_DIR, ResTools.getString(R.string.setting_not_set));
+                view.setTitle(ResTools.getString(R.string.setting_capture_output), capDir);
 
                 break;
             }
             case SETTING_ENHANCE_BACKGROUN_RUNNING:{
-                view.setTitle("Enhance background running", SystemUtils.batteryOptimizing()?"enhanced":null);
+                view.setTitle(ResTools.getString(R.string.setting_enhance_background_running),
+                        SystemUtils.batteryOptimizing()?ResTools.getString(R.string.setting_enhanced):null);
                 break;
             }
             case SETTING_CRASH_RECORDS:{
-                view.setTitle("Crash records", null);
+                view.setTitle(ResTools.getString(R.string.setting_crash_record), null);
                 break;
             }
             case SETTING_ABOUT:{
-                view.setTitle("About ", null);
+                view.setTitle(ResTools.getString(R.string.setting_about), null);
                 break;
             }
         }
@@ -159,7 +158,7 @@ public class SettingsWindow extends AbsListContentWindow<Integer,SettingsWindow.
                     mHostInputDialog.dismiss();
                     return;
                 }
-                Toast.makeText(getContext(),"invalidate input.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.tips_invalid_input, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -205,7 +204,7 @@ public class SettingsWindow extends AbsListContentWindow<Integer,SettingsWindow.
 
                 }
 
-                Toast.makeText(getContext(),"invalidate input.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.tips_invalid_input, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -242,7 +241,7 @@ public class SettingsWindow extends AbsListContentWindow<Integer,SettingsWindow.
                     MsgDispatcher.get().dispatchSync(Messege.PUSH_WINDOW, new CrashRecordWindow(ContextMgr.getContext()));
                     break;
                 }case SETTING_ABOUT:{
-                    Toast.makeText(getContext(), "NetCloud " + SystemUtils.getLocalVersionName(getContext())
+                    Toast.makeText(getContext(), ResTools.getString(R.string.app_name) + " " + SystemUtils.getLocalVersionName(getContext())
                             , Toast.LENGTH_SHORT).show();
                     break;
                 }case SETTING_ENHANCE_BACKGROUN_RUNNING:{
@@ -250,6 +249,8 @@ public class SettingsWindow extends AbsListContentWindow<Integer,SettingsWindow.
                     doze.setData(Uri.parse("package:" + getContext().getPackageName()));
                     if(getContext().getPackageManager().resolveActivity(doze, 0) != null){
                         getContext().startActivity(doze);
+                    }else{
+                        Toast.makeText(getContext(), R.string.tips_devices_not_available, Toast.LENGTH_SHORT).show();
                     }
                     break;
                 }

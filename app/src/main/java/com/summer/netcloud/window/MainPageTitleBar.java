@@ -68,14 +68,14 @@ public class MainPageTitleBar implements IMsgListener, View.OnClickListener{
     private void updateVPNState(){
         if(TrafficMgr.getInstance().isCtrlSetEmpty()){
             mStart.setSelected(true);
-            mStart.setText("Add");
+            mStart.setText(R.string.add);
         }else{
             if(TrafficMgr.getInstance().isEnable()){
                 mStart.setSelected(true);
-                mStart.setText("Stop");
+                mStart.setText(R.string.stop);
             }else{
                 mStart.setSelected(false);
-                mStart.setText("Start");
+                mStart.setText(R.string.start);
             }
         }
 

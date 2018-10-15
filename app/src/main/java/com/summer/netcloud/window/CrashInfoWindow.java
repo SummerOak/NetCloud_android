@@ -71,7 +71,7 @@ public class CrashInfoWindow extends AbsWindow {
         mTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
         mTitle.setSingleLine();
         mTitle.setTextColor(ResTools.getColor(R.color.background));
-        mTitle.setText("Tombstones");
+        mTitle.setText(R.string.tombstones);
         mTitle.setEllipsize(TextUtils.TruncateAt.START);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.leftMargin = (int)ResTools.getDimen(R.dimen.hor_padding);

@@ -51,18 +51,18 @@ public class AppsSelectWindow extends AbsListContentWindow<AppsSelectWindow.AppI
         if(mTitleBar == null){
             int textSize = (int)ResTools.getDimen(R.dimen.textsize1);
             mTitleBar = new TitleBar(getContext());
-            mTitleBar.setTitle("Select apps");
+            mTitleBar.setTitle(ResTools.getString(R.string.select_apps));
 
             mDone = new TextView(getContext());
             mDone.setOnClickListener(this);
-            mDone.setText("Done");
+            mDone.setText(R.string.done);
             mDone.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
             mDone.setTextColor(ResTools.getColor(R.color.background));
             mTitleBar.addRight(mDone);
 
             mCancelAll = new TextView(getContext());
             mCancelAll.setOnClickListener(this);
-            mCancelAll.setText("Cancel All");
+            mCancelAll.setText(R.string.cancel_all);
             mCancelAll.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
             mCancelAll.setTextColor(ResTools.getColor(R.color.background));
             mTitleBar.addRight(mCancelAll);

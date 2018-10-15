@@ -11,12 +11,14 @@ import com.summer.netcloud.ContextMgr;
 import com.summer.netcloud.MainActivity;
 import com.summer.netcloud.NetWatcherApp;
 import com.summer.netcloud.PermissionMgr;
+import com.summer.netcloud.R;
 import com.summer.netcloud.message.Messege;
 import com.summer.netcloud.message.MsgDispatcher;
 import com.summer.netcloud.utils.JobScheduler;
 import com.summer.netcloud.utils.Listener;
 import com.summer.netcloud.utils.Log;
 import com.summer.netcloud.utils.PackageUtils;
+import com.summer.netcloud.utils.ResTools;
 import com.summer.netcore.Config;
 import com.summer.netcore.NetCoreIface;
 import com.summer.netcore.VpnConfig;
@@ -398,7 +400,7 @@ public class TrafficMgr implements NetCoreIface.IListener, PermissionMgr.IPermis
     @Override
     public void onPermissionDenied() {
         if(mPendingStart){
-            Toast.makeText(ContextMgr.getApplicationContext(), "start failed, vpn permission is necessary.", Toast.LENGTH_LONG).show();
+            Toast.makeText(ContextMgr.getApplicationContext(), ResTools.getString(R.string.tips_vpn_permission), Toast.LENGTH_LONG).show();
             mPendingStart = false;
         }
     }

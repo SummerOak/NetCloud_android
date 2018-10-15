@@ -22,8 +22,8 @@ public class Constants {
 
     public static final byte DEBUG_LEV = DEBUG_LEV_DEBUG;
 
-    public static VpnConfig.AVAIL_CTRLS DEFAULT_SYSTEM_CTRL = VpnConfig.AVAIL_CTRLS.BASE;
-    public static VpnConfig.AVAIL_CTRLS DEFAULT_UNKNOWN_CTRL = VpnConfig.AVAIL_CTRLS.BASE;
+    public static VpnConfig.AVAIL_CTRLS DEFAULT_SYSTEM_CTRL = VpnConfig.AVAIL_CTRLS.PROXY;
+    public static VpnConfig.AVAIL_CTRLS DEFAULT_UNKNOWN_CTRL = VpnConfig.AVAIL_CTRLS.PROXY;
 
 
     public static Map<String,VpnConfig.AVAIL_CTRLS> DEFAULT_APP_CTRLS = new HashMap<>();

@@ -64,11 +64,11 @@ public class MainWindow extends AbsListContentWindow<Integer, MainWindow.ItemVie
 
     private void setEmptyDesc(){
         if(TrafficMgr.getInstance().isCtrlSetEmpty()){
-            setEmptyDescryption("Click \'Add\' right above\nand add apps you need into control");
+            setEmptyDescryption(ResTools.getString(R.string.tips_add_apps_to_ctrl));
         }else if(TrafficMgr.getInstance().isEnable()){
-            setEmptyDescryption("Monitoring connections...");
+            setEmptyDescryption(ResTools.getString(R.string.tips_monitoring));
         }else{
-            setEmptyDescryption("Click 'start' to start vpn service");
+            setEmptyDescryption(ResTools.getString(R.string.tips_start));
         }
     }
 

@@ -1,3 +1,49 @@
 <resources>
     <string name="app_name">NetCloud</string>
+    <string name="tips_vpn_permission">start failed, vpn permission is necessary.</string>
+    <string name="vpn_running">VPN service is running</string>
+    <string name="vpn_not_running">VPN service is not running</string>
+    <string name="stop">Stop</string>
+    <string name="start">Start</string>
+    <string name="select_apps">Select apps</string>
+
+    <string name="done">Done</string>
+    <string name="add">Add</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+
+    <string name="cancel_all">Cancel all</string>
+    <string name="tombstones">Tombstones</string>
+    <string name="host">ip:</string>
+    <string name="port">port:</string>
+
+    <string name="tips_add_apps_to_ctrl">Click \'Add\' right above and add apps you need into control</string>
+    <string name="tips_monitoring">Monitoring connections...</string>
+    <string name="tips_start">Click \'start\' to start vpn service</string>
+    <string name="tips_none_ctrl">Not config any strategies.</string>
+    <string name="tips_none_crash">No crash records</string>
+
+    <string name="ctrl_add_app">Add apps</string>
+    <string name="ctrl_add_ip">Add an IP</string>
+    <string name="ctrl_add_domain">Add a domain</string>
+
+    <string name="settings">Settings</string>
+    <string name="setting_ctrl">Controls</string>
+    <string name="setting_dns">DNS</string>
+    <string name="setting_proxy_server">Proxy server</string>
+    <string name="setting_capture_output">Capture output directory</string>
+    <string name="setting_enhance_background_running">Enhance background running</string>
+    <string name="setting_enhanced">Enhanced</string>
+    <string name="setting_crash_record">Crash records</string>
+    <string name="setting_about">About</string>
+    <string name="setting_not_set">not set</string>
+
+    <string name="tips_invalid_input">Invalid input.</string>
+    <string name="tips_devices_not_available">Not available on this device.</string>
+
+    <string name="ctrl_type_none">None</string>
+    <string name="ctrl_type_proxy">Proxy</string>
+    <string name="ctrl_type_capture">Capture</string>
+    <string name="ctrl_type_pxy_cap">Pxy&amp;Cap</string>
+
 </resources>

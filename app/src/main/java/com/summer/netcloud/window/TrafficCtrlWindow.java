@@ -57,7 +57,7 @@ public class TrafficCtrlWindow extends AbsListContentWindow<TrafficCtrlWindow.Ct
     private TrafficCtrlWindow(Context context) {
         super(context);
 
-        setEmptyDescryption("No apps under control");
+        setEmptyDescryption(ResTools.getString(R.string.tips_none_ctrl));
     }
 
     public static TrafficCtrlWindow createWindow(Context context, int ctrl){
@@ -92,12 +92,12 @@ public class TrafficCtrlWindow extends AbsListContentWindow<TrafficCtrlWindow.Ct
             mTitleBar.addRight(mAdd);
             mEdit = new TextView(getContext());
             mEdit.setOnClickListener(this);
-            mEdit.setText("Edit");
+            mEdit.setText(R.string.edit);
             mEdit.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
             mEdit.setTextColor(ResTools.getColor(R.color.background));
             mTitleBar.addRight(mEdit);
 
-            setTitle("Ctrl Strategy");
+            setTitle(ResTools.getString(R.string.setting_ctrl));
         }
 
         return mTitleBar;
@@ -242,7 +242,7 @@ public class TrafficCtrlWindow extends AbsListContentWindow<TrafficCtrlWindow.Ct
                     return;
                 }
 
-                Toast.makeText(getContext(),"invalidate input.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),R.string.tips_invalid_input, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -288,10 +288,10 @@ public class TrafficCtrlWindow extends AbsListContentWindow<TrafficCtrlWindow.Ct
         mEditMode = !mEditMode;
         if(mEditMode){
             mAdd.setVisibility(View.INVISIBLE);
-            mEdit.setText("Done");
+            mEdit.setText(R.string.done);
         }else{
             mAdd.setVisibility(View.VISIBLE);
-            mEdit.setText("Edit");
+            mEdit.setText(R.string.edit);
         }
         update();
     }
@@ -378,7 +378,7 @@ public class TrafficCtrlWindow extends AbsListContentWindow<TrafficCtrlWindow.Ct
             int buttonVtlPadding = (int)ResTools.getDimen(R.dimen.btn_vtl_padding);
             mDelete.setPadding(hp, buttonVtlPadding, hp, buttonVtlPadding);
             mDelete.setOnClickListener(this);
-            mDelete.setText("Delete");
+            mDelete.setText(R.string.delete);
             mDelete.setTextSize(TypedValue.COMPLEX_UNIT_PX, (int)ResTools.getDimen(R.dimen.textsize2));
             mDelete.setTextColor(ResTools.getColor(R.color.blue));
             mDelete.setBackgroundResource(R.drawable.button_blue);
@@ -543,9 +543,9 @@ public class TrafficCtrlWindow extends AbsListContentWindow<TrafficCtrlWindow.Ct
         private String getAddDesc(VpnConfig.CtrlType ctrlType){
             if(ctrlType != null){
                 switch (ctrlType){
-                    case APP:return "Add apps";
-                    case IP:return "Add an IP";
-                    case DOMAIN:return "Add a domain";
+                    case APP:return ResTools.getString(R.string.ctrl_add_app);
+                    case IP:return ResTools.getString(R.string.ctrl_add_ip);
+                    case DOMAIN:return ResTools.getString(R.string.ctrl_add_domain);
                 }
             }
 
@@ -561,7 +561,7 @@ public class TrafficCtrlWindow extends AbsListContentWindow<TrafficCtrlWindow.Ct
                 textView.setTextColor(ResTools.getColor(R.color.background));
             }
 
-            textView.setText("Add");
+            textView.setText(R.string.add);
             return textView;
         }
     }
@@ -605,7 +605,7 @@ public class TrafficCtrlWindow extends AbsListContentWindow<TrafficCtrlWindow.Ct
             }
 
             VpnConfig.AVAIL_CTRLS ctrl = getItem(position);
-            ((TextView)convertView).setText(ctrl==null?"null":ctrl.name);
+            ((TextView)convertView).setText(getCustomCtrlName(ctrl));
             return convertView;
         }
 
@@ -622,27 +622,38 @@ public class TrafficCtrlWindow extends AbsListContentWindow<TrafficCtrlWindow.Ct
             }
 
             VpnConfig.AVAIL_CTRLS ctrl = getItem(position);
-            if(ctrl != null){
-                textView.setText(ctrl.name);
-                if((ctrl.ctrls& VpnConfig.CTRL_BITS.BLOCK) > 0){
-                    textView.setTextColor(ResTools.getColor(R.color.red));
-                    textView.setBackgroundResource(R.drawable.button_red);
-                }else if((ctrl.ctrls& VpnConfig.CTRL_BITS.PROXY) > 0){
-                    textView.setTextColor(ResTools.getColor(R.color.green));
-                    textView.setBackgroundResource(R.drawable.button_green);
-                }else if((ctrl.ctrls& VpnConfig.CTRL_BITS.CAPTURE) > 0){
-                    textView.setTextColor(ResTools.getColor(R.color.blue));
-                    textView.setBackgroundResource(R.drawable.button_blue);
-                }else{
-                    textView.setTextColor(ResTools.getColor(R.color.gray));
-                    textView.setBackgroundResource(R.drawable.button_gray);
-                }
-
+            textView.setText(getCustomCtrlName(ctrl));
+            if((ctrl.ctrls& VpnConfig.CTRL_BITS.BLOCK) > 0){
+                textView.setTextColor(ResTools.getColor(R.color.red));
+                textView.setBackgroundResource(R.drawable.button_red);
+            }else if((ctrl.ctrls& VpnConfig.CTRL_BITS.PROXY) > 0){
+                textView.setTextColor(ResTools.getColor(R.color.green));
+                textView.setBackgroundResource(R.drawable.button_green);
+            }else if((ctrl.ctrls& VpnConfig.CTRL_BITS.CAPTURE) > 0){
+                textView.setTextColor(ResTools.getColor(R.color.blue));
+                textView.setBackgroundResource(R.drawable.button_blue);
             }else{
-                textView.setText("null");
+                textView.setTextColor(ResTools.getColor(R.color.gray));
+                textView.setBackgroundResource(R.drawable.button_gray);
             }
 
             return textView;
         }
+    }
+
+    private static String getCustomCtrlName(VpnConfig.AVAIL_CTRLS ctrls){
+        if(ctrls != null) {
+            switch (ctrls) {
+                case BASE:
+                    return ResTools.getString(R.string.ctrl_type_none);
+                case PROXY:
+                    return ResTools.getString(R.string.ctrl_type_proxy);
+                case CAPTURE:
+                    return ResTools.getString(R.string.ctrl_type_capture);
+                case PROXY_CAPTURE:
+                    return ResTools.getString(R.string.ctrl_type_pxy_cap);
+            }
+        }
+        return "";
     }
 }

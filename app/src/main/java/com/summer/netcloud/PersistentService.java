@@ -9,6 +9,7 @@ import android.widget.RemoteViews;
 import com.summer.netcloud.message.IMsgListener;
 import com.summer.netcloud.message.Messege;
 import com.summer.netcloud.message.MsgDispatcher;
+import com.summer.netcloud.utils.ResTools;
 import com.summer.netcore.NetCoreIface;
 
 /**
@@ -54,8 +55,8 @@ public class PersistentService extends Service implements IMsgListener{
         Notification notification = NetWatcherApp.getNotification();
         RemoteViews content = notification.contentView;
         if(content != null){
-            content.setCharSequence(R.id.netcloud_notify_desc, "setText", NetCoreIface.isServerRunning()?"VPN service is running":"VPN service is not running");
-            content.setCharSequence(R.id.netcloud_notify_button, "setText", NetCoreIface.isServerRunning()?"STOP":"START");
+            content.setCharSequence(R.id.netcloud_notify_desc, "setText", ResTools.getString(NetCoreIface.isServerRunning()? R.string.vpn_running:R.string.vpn_not_running));
+            content.setCharSequence(R.id.netcloud_notify_button, "setText", ResTools.getString(NetCoreIface.isServerRunning()? R.string.stop:R.string.start));
         }
 
         startForeground(notificationID, notification);
